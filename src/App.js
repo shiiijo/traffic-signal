@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import styles from "./TrafficSignal.module.css"; // Using CSS Module
-
-const SIGNALS = ["Signal 1", "Signal 2", "Signal 3", "Signal 4"];
-const GREEN_DURATION = 5; // Duration for green light
-const YELLOW_DURATION = 2; // Duration for yellow light
+import styles from "./TrafficSignal.module.css";
+import {
+  GREEN_LIGHT_DURATION,
+  YELLOW_LIGHT_DURATION,
+  SIGNALS,
+} from "./constants";
 
 const TrafficSignal = ({ name, status, timeLeft }) => {
   return (
@@ -32,7 +33,7 @@ const TrafficSignal = ({ name, status, timeLeft }) => {
 const useTrafficSignal = (signals, greenDuration, yellowDuration) => {
   const [currentSignal, setCurrentSignal] = useState(0);
   const [timeLeft, setTimeLeft] = useState(greenDuration);
-  const [phase, setPhase] = useState("green"); // "green" or "yellow"
+  const [phase, setPhase] = useState("green");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,7 +44,6 @@ const useTrafficSignal = (signals, greenDuration, yellowDuration) => {
             setPhase("yellow");
             return yellowDuration;
           } else if (phase === "yellow") {
-            // Switch to the next signal and reset to green phase
             setCurrentSignal((prevSignal) => (prevSignal + 1) % signals.length);
             setPhase("green");
             return greenDuration;
@@ -54,7 +54,7 @@ const useTrafficSignal = (signals, greenDuration, yellowDuration) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [phase, currentSignal, signals.length, greenDuration, yellowDuration]); // Include all dependencies
+  }, [phase, currentSignal, signals.length, greenDuration, yellowDuration]);
 
   return { currentSignal, timeLeft, phase };
 };
@@ -62,8 +62,8 @@ const useTrafficSignal = (signals, greenDuration, yellowDuration) => {
 export default function Intersection() {
   const { currentSignal, timeLeft, phase } = useTrafficSignal(
     SIGNALS,
-    GREEN_DURATION,
-    YELLOW_DURATION
+    GREEN_LIGHT_DURATION,
+    YELLOW_LIGHT_DURATION
   );
 
   return (
